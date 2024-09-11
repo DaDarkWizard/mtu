@@ -10,7 +10,7 @@ mtu_id username
 mtu_password fullPassword
 ```
 
-This file is stored in C:\Users\Username\.mtu\config
+This file is stored in `C:\Users\Username\.mtu\config`
 
 Usage:
 
