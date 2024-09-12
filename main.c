@@ -22,10 +22,18 @@ int main(int argc, char **argv)
         return 0;
     }
 
+    Config config;
+
+    if ( !load_config(&config) )
+    {
+        printf("Failed to load config.\n");
+        return -1;
+    }
+
     // Check what command is being run and handle it.
     if(strcmp(argv[1], "vpn") == 0)
     {
-        return vpn_handler(argc, argv);
+        return vpn_handler(argc, argv, &config);
     }
     else
     {
