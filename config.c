@@ -11,12 +11,30 @@
  */
 int get_next_arg(FILE *inputFile, char *buffer, char **dest)
 {
-    int scanResult = fscanf(inputFile, "%1023s", buffer);
-    if ( scanResult == 0 || scanResult == EOF )
+    char *scanResult = fgets(buffer, 1024, inputFile);
+    if ( scanResult == NULL )
     {
         printf("Failed when parsing mtu conf arg.\n");
         return -1;
     }
+    // Trim the string.
+    int whiteSpaceCount = 0;
+    int bufferlen = strnlen(buffer, 1024);
+    for(; whiteSpaceCount < bufferlen
+            && (buffer[whiteSpaceCount] == ' ' ||
+                buffer[whiteSpaceCount] == '\t') ; whiteSpaceCount++);
+
+    for(int i = whiteSpaceCount; i <= bufferlen; i++)
+    {
+        buffer[i - whiteSpaceCount] = buffer[i];
+    }
+
+    if ( buffer[strnlen(buffer, 1024) - 1] == '\n' )
+    {
+        buffer[strnlen(buffer, 1024) - 1] = 0;
+    }
+
+    // Copy the string into the buffer.
     *dest = malloc(strlen(buffer) + 1);
     if( !*dest )
     {
@@ -24,6 +42,7 @@ int get_next_arg(FILE *inputFile, char *buffer, char **dest)
         return -1;
     }
     strcpy(*dest, buffer);
+    return 0;
 }
 
 /*

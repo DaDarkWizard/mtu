@@ -7,6 +7,7 @@
  */
 
 #include "vpn_handler.h"
+#include "print_handler.h"
 
 #include <stdio.h>
 #include <getopt.h>
@@ -34,6 +35,10 @@ int main(int argc, char **argv)
     if(strcmp(argv[1], "vpn") == 0)
     {
         return vpn_handler(argc, argv, &config);
+    }
+    else if (strcmp(argv[1], "print") == 0)
+    {
+        return print_handler(argc, argv, &config);
     }
     else
     {

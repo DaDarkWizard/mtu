@@ -1,7 +1,8 @@
+C_FILES=main.c vpn_handler.c print_handler.c config.c
+H_FILES=vpn_handler.h print_handler.h config.h
 
-
-mtu: main.c vpn_handler.c vpn_handler.h config.h config.c
-	gcc main.c vpn_handler.c config.c -o mtu
+mtu: $(C_FILES) $(H_FILES)
+	gcc $(C_FILES) -o mtu
 
 
 .PHONY: clean
