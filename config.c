@@ -110,6 +110,10 @@ int load_config(Config *config)
                 return -1;
             }
         }
+        else
+        {
+            printf("Unknown arg: '%s'\n", buffer);
+        }
 
         scanResult = fscanf(configFile, "%1023s", buffer);
     }
