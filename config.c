@@ -50,12 +50,23 @@ int get_next_arg(FILE *inputFile, char *buffer, char **dest)
  */
 int load_config(Config *config)
 {
+    #ifdef _WIN32
     const char *home_dir = getenv("USERPROFILE");
     if(!home_dir)
     {
         printf("No home dir variable set.\n");
         return -1;
     }
+    #endif
+
+    #ifdef unix
+
+    const char *username = getlogin();
+    char *home_dir = char[strlen("/home/") + strlen(username) + 1];
+    strcpy(home_dir, "/home/");
+    strcpy(strlen(home_dir) + home_dir, username);
+    
+    #endif
 
     char *buffer = malloc(1024);
     int bufferLength = strlen(home_dir);
@@ -67,7 +78,12 @@ int load_config(Config *config)
     }
 
     strcpy(buffer, home_dir);
+    #ifdef _WIN
     strcpy(&buffer[bufferLength], "\\.mtu\\config");
+    #endif
+    #ifdef unix
+    strcpy(&buffer[bufferLength], "/.mtu/config");
+    #endif
     bufferLength += 12;
 
     FILE *configFile;
