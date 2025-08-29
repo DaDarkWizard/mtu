@@ -33,8 +33,6 @@ int vpn_handler(int argc, char **argv, Config *config)
         #endif
         #if unix
         sprintf(buffer, "f5fpc --start -t https://vpn.mtu.edu -x -u %s -p \"%s\"", config->mtuId, config->mtuPassword);
-        printf(buffer);
-        printf("\n");
         #endif
         FILE *command = popen(buffer, "r");
         pclose(command);
