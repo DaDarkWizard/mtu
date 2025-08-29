@@ -75,6 +75,7 @@ int vpn_handler(int argc, char **argv, Config *config)
         #endif
         #if unix
         sprintf(buffer, "f5fpc -o");
+        FILE *command;
         #endif
         command = popen(buffer, "r");
         pclose(command);
