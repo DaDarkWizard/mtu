@@ -12,6 +12,7 @@
 int get_next_arg(FILE *inputFile, char *buffer, char **dest)
 {
     char *scanResult = fgets(buffer, 1024, inputFile);
+    printf("Scanned text: '%s'\n", scanResult);
     if ( scanResult == NULL )
     {
         printf("Failed when parsing mtu conf arg.\n");
