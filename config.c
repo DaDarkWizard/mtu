@@ -62,7 +62,7 @@ int load_config(Config *config)
     #ifdef unix
 
     const char *username = getlogin();
-    char *home_dir = char[strlen("/home/") + strlen(username) + 1];
+    char home_dir[strlen("/home/") + strlen(username) + 1];
     strcpy(home_dir, "/home/");
     strcpy(strlen(home_dir) + home_dir, username);
     
