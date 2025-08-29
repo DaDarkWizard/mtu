@@ -17,6 +17,7 @@ int get_next_arg(FILE *inputFile, char *buffer, char **dest)
         printf("Failed when parsing mtu conf arg.\n");
         return -1;
     }
+    printf("found arg: %s\n", scanResult);
     // Trim the string.
     int whiteSpaceCount = 0;
     int bufferlen = strnlen(buffer, 1024);
