@@ -28,7 +28,12 @@ int vpn_handler(int argc, char **argv, Config *config)
     if(strcmp(argv[2], "connect") == 0 ||
         strcmp(argv[2], "start") == 0)
     {
+        #if _WIN32
         sprintf(buffer, "f5fpc -start /h https://vpn.mtu.edu /u %s /p %s", config->mtuId, config->mtuPassword);
+        #endif
+        #if unix
+        sprintf(buffer, "f5fpc --start -t https://vpn.mtu.edu -x -u %s -p \"%s\"", config->mtuId, config->mtuPassword);
+        #endif
         FILE *command = popen(buffer, "r");
         pclose(command);
         return 0;
@@ -37,6 +42,7 @@ int vpn_handler(int argc, char **argv, Config *config)
             strcmp(argv[2], "stop") == 0 ||
             strcmp(argv[2], "close") == 0)
     {
+        #if _WIN32
         sprintf(buffer, "f5fpc -info");
         FILE *command = popen(buffer, "r");
         if( !command )
@@ -64,7 +70,12 @@ int vpn_handler(int argc, char **argv, Config *config)
         fscanf(command, "%29s", smallBuffer);
         pclose(command);
 
+        
         sprintf(buffer, "f5fpc -stop /s %s", smallBuffer);
+        #endif
+        #if unix
+        sprintf(buffer, "f5fpc -o");
+        #endif
         command = popen(buffer, "r");
         pclose(command);
         return 0;
