@@ -12,13 +12,11 @@
 int get_next_arg(FILE *inputFile, char *buffer, char **dest)
 {
     char *scanResult = fgets(buffer, 1024, inputFile);
-    printf("Scanned text: '%s'\n", scanResult);
     if ( scanResult == NULL )
     {
         printf("Failed when parsing mtu conf arg.\n");
         return -1;
     }
-    printf("found arg: %s\n", scanResult);
     // Trim the string.
     int whiteSpaceCount = 0;
     int bufferlen = strnlen(buffer, 1024);
@@ -38,7 +36,6 @@ int get_next_arg(FILE *inputFile, char *buffer, char **dest)
 
     // Copy the string into the buffer.
     *dest = malloc(strlen(buffer) + 1);
-    printf("Final arg: '%s'\n", buffer);
     if( !*dest )
     {
         printf("Failed to malloc space for mtu conf arg.\n");
@@ -106,7 +103,6 @@ int load_config(Config *config)
         }
         else if ( strcmp(buffer, "mtu_password") == 0 )
         {
-            printf("At password: %s\n", buffer);
             if ( get_next_arg(configFile, buffer, &config->mtuPassword) )
             {
                 return -1;
