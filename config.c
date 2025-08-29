@@ -105,6 +105,7 @@ int load_config(Config *config)
         }
         else if ( strcmp(buffer, "mtu_password") == 0 )
         {
+            printf("At password: %s\n", buffer);
             if ( !get_next_arg(configFile, buffer, &config->mtuPassword) )
             {
                 return -1;
