@@ -98,7 +98,7 @@ int load_config(Config *config)
     {
         if ( strcmp(buffer, "mtu_id") == 0 )
         {
-            if ( !get_next_arg(configFile, buffer, &config->mtuId) )
+            if ( get_next_arg(configFile, buffer, &config->mtuId) )
             {
                 return -1;
             }
@@ -106,7 +106,7 @@ int load_config(Config *config)
         else if ( strcmp(buffer, "mtu_password") == 0 )
         {
             printf("At password: %s\n", buffer);
-            if ( !get_next_arg(configFile, buffer, &config->mtuPassword) )
+            if ( get_next_arg(configFile, buffer, &config->mtuPassword) )
             {
                 return -1;
             }
