@@ -38,6 +38,7 @@ int get_next_arg(FILE *inputFile, char *buffer, char **dest)
 
     // Copy the string into the buffer.
     *dest = malloc(strlen(buffer) + 1);
+    printf("Final arg: '%s'\n", *dest);
     if( !*dest )
     {
         printf("Failed to malloc space for mtu conf arg.\n");
