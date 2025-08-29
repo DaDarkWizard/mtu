@@ -25,7 +25,7 @@ int main(int argc, char **argv)
 
     Config config;
 
-    if ( !load_config(&config) )
+    if ( load_config(&config) != 0 )
     {
         printf("Failed to load config.\n");
         return -1;
