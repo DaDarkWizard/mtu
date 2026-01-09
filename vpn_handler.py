@@ -21,6 +21,11 @@ async def main():
 
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch()
+        # Load the cookies
+        context = await browser.new_context()
+        with open("cookies.json", "r") as f:
+            cookies = json.loads(f.read())
+            await context.add_cookies(cookies)
         page = await browser.new_page()
         await page.goto("https://vpn.mtu.edu")
         await page.get_by_label('Username').fill(config['mtu_id'])
@@ -29,12 +34,14 @@ async def main():
         await page.locator('button', has_text='Other options').click()
         await page.locator('a', has_text='Duo Push').click()
         await page.locator('button', has_text='Yes, this is my device').click()
-        await asyncio.sleep(3)
         try:
             await page.get_by_title('Access MTU Network 010').focus()
         except PlaywrightTimeoutError:
             await page.screenshot(path="test.png")
         session_id = await page.evaluate('() => document.cookie.match(/MRHSession=(.*?); /)[1]')
+        # Save the cookies
+        with open("cookies.json", "w") as f:
+            await f.write(json.dumps(context.cookies()))
         await browser.close()
 
     return session_id
