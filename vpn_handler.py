@@ -21,7 +21,7 @@ async def main():
     session_id = ''
 
     async with async_playwright() as playwright:
-        browser = await playwright.chromium.launch(headless=False)
+        browser = await playwright.chromium.launch()
         # Create context with attached storage if exists
         storage_path = Path("storage.json")
         if storage_path.exists():
