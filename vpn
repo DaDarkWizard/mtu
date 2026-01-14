@@ -2,9 +2,29 @@
 
 source ~/source/repos/mtu/python_venv/bin/activate
 
+# Clean up process
+cleanup(){
+  echo "CTRL C pressed. Cleaning up and closing"
+  if [ "$1" == "stop" ] || [ "$1" == "kill" ]; then 
+    kill -KILL "$process_id"
+    # Delete old process id
+    echo -n "" > "/home/robbyj1388/source/repos/mtu/process_id.txt"
+    echo "VPN stopped!"
+    exit 0
+  else
+    # Delete old process id
+    echo -n "" > "/home/robbyj1388/source/repos/mtu/process_id.txt"
+    echo "VPN stopped!"
+    exit 0
+  fi
+}
+
+# If ctrl c pressed called cleanup method
+trap cleanup SIGINT 
+
 process_id=$(head -n 1 "/home/robbyj1388/source/repos/mtu/process_id.txt")
 echo "$process_id"
-# if id exist 
+# If id exist 
 if [ -n "$process_id" ]; then
   # if stop arg is given then kill process_id
   if [ "$1" == "stop" ] || [ "$1" == "kill" ]; then 
@@ -14,7 +34,8 @@ if [ -n "$process_id" ]; then
     echo "VPN stopped!"
     exit 0
   else 
-    echo "ERROR: USAGE vpn <stop>"
+    echo "VPN ALREADY ACTIVE. Use 'vpn stop' to stop it."
+    exit 0
   fi
 
 # if file doesn't exist or is empty
@@ -23,9 +44,11 @@ elif [ ! -s "$process_id" ]; then
     echo "No vpn active"
     exit 0
   else # no vpn is running so start new session
+    # Run vpn.py and grab process id (last line echo to term)
     process_id=$(python3 "/home/robbyj1388/source/repos/mtu/vpn_handler.py" | tail -n 1)
     echo "VPN started!, id = $process_id"
     echo "$process_id" > "/home/robbyj1388/source/repos/mtu/process_id.txt" 
+    exit 0
   fi
 fi
 

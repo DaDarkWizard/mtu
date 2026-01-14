@@ -3,11 +3,20 @@ import asyncio
 import json
 from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
 from subprocess import Popen, DEVNULL
+"""
+TO-DO 
+    FIX PATH VARIABLES (storage.json being created where vpn bash script is called)
+    DNS ISSUE (no wifi)
+    script bug doesn't tell user when to check for duo properly
 
+"""
 async def main():
     homedirectory = Path.home()
 
     config_file = open(str(homedirectory) + '/.mtu/config')
+
+    # Get the directory where the script is located
+    script_dir = Path(__file__).parent.resolve()
 
     config = {}
 
@@ -23,7 +32,7 @@ async def main():
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch()
         # Create context with attached storage if exists
-        storage_path = Path("storage.json")
+        storage_path = Path(script_dir / "storage.json")
         if storage_path.exists():
             try: 
                 context = await browser.new_context(storage_state=storage_path)
@@ -57,7 +66,7 @@ async def main():
                 
         # Save the storage 
         print("Saving storage")
-        await context.storage_state(path="storage.json")
+        await context.storage_state(path=storage_path)
         print("Done!")
         # Activate vpn 
         try:
