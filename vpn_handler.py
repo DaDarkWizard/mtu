@@ -1,7 +1,7 @@
 from pathlib import Path
 import asyncio
 import json
-from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError
+from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeoutError, expect
 from subprocess import Popen, DEVNULL
 
 async def main():
@@ -21,7 +21,7 @@ async def main():
     session_id = ''
 
     async with async_playwright() as playwright:
-        browser = await playwright.chromium.launch()
+        browser = await playwright.chromium.launch(headless=True)
         # Create context with attached storage if exists
         storage_path = Path("storage.json")
         if storage_path.exists():
@@ -34,6 +34,7 @@ async def main():
             context = await browser.new_context()
         # Open browser and go to vpn.mtu.edu and sign in
         page = await context.new_page()
+        page.on('dialog', lambda dialog: dialog.dismiss())
         await page.goto("https://vpn.mtu.edu")
         # Try sign in if no storage
         if await page.get_by_label('Username').is_visible():
@@ -43,15 +44,24 @@ async def main():
                 await page.locator('input', has_text='Logon').click()
                 print("Please accept DUO prompt")
                 # Handle Duo 2FA Options
-                #await page.locator('button', has_text='Other options').click()
-                #await page.locator('a', has_text='Duo Push').click()
+                print("Checking for other options")
+                btn = page.locator('button', has_text='Other options')
+                ael = page.locator('a', has_text='Other options')
+                await expect(btn.or_(ael).first).to_be_visible()
+                if await btn.is_visible():
+                    print("button found")
+                    await btn.click()
+                elif await ael.is_visible():
+                    print("link found")
+                    await ael.click()
                 # If trust button is visible click it
                 button = page.locator("#trust-browser-button")
                 try:
                     await button.wait_for(state="visible", timeout=20000)
                     await button.click()
-                except Exception:
+                except Exception as e:
                     print("Duo prompt did not appear")
+                    print(f"ERROR {e}")
             except Exception as e:
                 print(f"ERROR {e}")
                 
